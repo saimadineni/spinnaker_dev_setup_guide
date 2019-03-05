@@ -105,6 +105,18 @@ Now enable AWS
 
 `./hal config provider aws enable`
 
+Also make sure you edit the trust relationship corresponding to SpinnakerManaged Role
+
+You should add this to the IAM user corresponding to the access/secret key that is being used for all the above steps.
+
+ {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<acctno>:user/<username>"
+      },
+      "Action": "sts:AssumeRole"
+    }
+
 ## Step 5: Choose your Environment, In this step, you tell Halyard in what type of environment to install Spinnaker.
 
 we'll choose local installations from github
