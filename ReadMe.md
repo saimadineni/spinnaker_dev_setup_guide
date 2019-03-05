@@ -78,38 +78,44 @@ I've chose EC2 and follwed the steps here. You can setup managed/managing infra.
 
 https://www.spinnaker.io/setup/install/providers/aws/aws-ec2/
 
-` curl https://d3079gxvs8ayeg.cloudfront.net/templates/managing.yaml
+```
+curl https://d3079gxvs8ayeg.cloudfront.net/templates/managing.yaml
 echo "Optionally add Managing account to the file downloaded as shown at https://github.com/spinnaker/spinnaker.github.io/tree/master/setup/install/providers/aws/managing.yaml#L104"
 aws cloudformation deploy --stack-name spinnaker-managing-infrastructure-setup --template-file managing.yaml \
---parameter-overrides UseAccessKeyForAuthentication=false --capabilities CAPABILITY_NAMED_IAM --region us-west-2`
+--parameter-overrides UseAccessKeyForAuthentication=false --capabilities CAPABILITY_NAMED_IAM --region us-west-2
+```
 
 Before running the below command make sure you replace AuthArn and Managing account details from the output of the above stack.
 
-`curl https://d3079gxvs8ayeg.cloudfront.net/templates/managed.yaml
+```
+curl https://d3079gxvs8ayeg.cloudfront.net/templates/managed.yaml
 aws cloudformation deploy --stack-name spinnaker-managed-infrastructure-setup --template-file managed.yaml \
---parameter-overrides AuthArn=FROM_ABOVE ManagingAccountId=FROM_ABOVE --capabilities CAPABILITY_NAMED_IAM --region us-west-2`
+--parameter-overrides AuthArn=FROM_ABOVE ManagingAccountId=FROM_ABOVE --capabilities CAPABILITY_NAMED_IAM --region us-west-2
+```
 
 Configure Halyard to use AccessKeys (if configured)
 
-`./hal config provider aws edit --access-key-id ${ACCESS_KEY_ID} \
-    --secret-access-key `
+```
+./hal config provider aws edit --access-key-id ${ACCESS_KEY_ID} \
+    --secret-access-key 
+```
 
 Configure Halyard to add AWS Accounts
 
-`$AWS_ACCOUNT_NAME={name for AWS account in Spinnaker, e.g. my-aws-account}
-
+`AWS_ACCOUNT_NAME={name for AWS account in Spinnaker, e.g. my-aws-account}`
+```
 ./hal config provider aws account add $AWS_ACCOUNT_NAME \
     --account-id ${ACCOUNT_ID} \
     --assume-role role/spinnakerManaged`
 
 Now enable AWS
-
+```
 `./hal config provider aws enable`
 
 Also make sure you edit the trust relationship corresponding to SpinnakerManaged Role
 
 You should add this to the IAM user corresponding to the access/secret key that is being used for all the above steps.
-
+```
  {
       "Effect": "Allow",
       "Principal": {
@@ -117,7 +123,7 @@ You should add this to the IAM user corresponding to the access/secret key that 
       },
       "Action": "sts:AssumeRole"
     }
-
+```
 ## Step 5: Choose your Environment, In this step, you tell Halyard in what type of environment to install Spinnaker.
 
 we'll choose local installations from github
@@ -134,10 +140,12 @@ NOTE: Be sure to use the same username here that you forked the Spinnaker reposi
 `YOUR_SECRET_KEY_ID=your_aws_secret_key_id`
 `REGION=YOUR_REGION`
 
-`./hal config storage s3 edit \
+```
+./hal config storage s3 edit \
     --access-key-id $YOUR_SECRET_KEY_ID \
     --secret-access-key \
-    --region $REGION`
+    --region $REGION
+```
 
 Finally, set the storage source to S3:
 
