@@ -175,7 +175,7 @@ So, in my understanding one way to edit the clouddriver config is to edit cloudd
 In that I could edit the clouddriver.yml by adding the overwrite for lambda.
 
 I've tried several combinations of all the below entries 
-
+```
 aws:
   lambda:
     enabled: true
@@ -207,7 +207,7 @@ awslambda:
     regions: []
     assumeRole: role/spinnakerManaged
     awsAccount: my_profile
-
+```
 After making these changes and restarting the clouddriver I was still getting a null response
 when I hit
 
